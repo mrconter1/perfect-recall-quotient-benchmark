@@ -2,7 +2,7 @@
   {
     "title": "DNA sequencing with chain-terminating inhibitors",
     "quotes": [
-      "Another rapid and simple method that depends on specific chemical degradation of the DNA has recently been described by Maxam and Gilbert",
+      "show up as bands, thus avoiding a source of error in the plus and",
       "of about 110 nucleotides starting 33 residues from the priming site can be read off",
       "DNA forming base-paired loops under the conditions of the acrylamide gel electrophoresis."
     ],
@@ -16,5 +16,41 @@
       "it would appear that only about half produce significant reduction of the Folin reagent"
     ],
     "citations": 232689
+  },
+  {
+    "title": "A rapid and sensitive method for the quantitation of microgram quantities of protein utilizing the principle of protein-dye binding",
+    "quotes": [
+      "is based on the observation that Coomassie Brilliant Blue G-250",
+      "standard assays of bovine serum albumin as a standard result in a highly reproducible response pattern.",
+      "protein-dye complex in solution to bind to cuvettes."
+    ],
+    "citations": 255313 
+  },
+  {
+    "title": "Fuzzy sets",
+    "quotes": [
+      "It should be noted that, although the membership function of a fuzzy",
+      "If A is a convex fuzzy set, then its core is a convex set",
+      "In the ease of binary fuzzy relations, the composition of two fuzzy"
+    ],
+    "citations": 122791
+  },
+  {
+    "title": "A short history of SHELX",
+    "quotes": [
+      "to uncompress the source again to the full 5000 cards for local use",
+      "It was however extended to include the free-R flag",
+      "and because at the time few programs were available that could read"
+    ],
+    "citations": 122791
+  },
+  {
+    "title": "Optimization by simulated annealing",
+    "quotes": [
+      "The simplest placement problems arise in designing chips with structured layout rules",
+      "we consider 98 chips packaged on one multilayer ceramic module of the",
+      "Cooling very slowly until the chips move sluggishly and the objective function ceases to decrease"
+    ],
+    "citations": 59395
   }
 ]
