@@ -38,13 +38,10 @@ async def process_question(provider, model_name, item):
             elif extracted_title.lower() == "unable to recall":
                 return "Unable to recall"
             else:
-                print(f"\nIncorrect answer for {model_name}. Expected: {item['title']}, Got: {extracted_title}")
                 return "Incorrect"
         else:
-            print(f"\nWarning: Could not parse response for {model_name}: {response}")
             return "Parse error"
     except Exception as e:
-        print(f"\nError occurred for {model_name}: {str(e)}")
         return "Error"
 
 async def process_model(model_name, questions, pbar):
