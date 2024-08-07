@@ -22,17 +22,20 @@ Unable to recall
 
 Your response will be evaluated for accuracy and used to assess your recall capabilities. Ensure your entire response is contained within these tags."""
 
-async def process_question(provider, model_name, item):
-    prompt = create_prompt(item['quote'])
+async def process_question(provider, model_name, title, quote):
+    if not quote:
+        return "Blank"
+    
+    prompt = create_prompt(quote)
     try:
         response = await provider.send_prompt(prompt, model_name)
         
         match = re.search(r'<TITLE>\s*(.*?)\s*</TITLE>', response, re.DOTALL | re.IGNORECASE)
         if match:
             extracted_title = match.group(1).strip()
-            if extracted_title.lower() == item['title'].strip().lower():
+            if extracted_title.lower() == title.strip().lower():
                 print(f"\nCorrect answer for {model_name}:")
-                print(f"Quote: \"{item['quote']}\"")
+                print(f"Quote: \"{quote}\"")
                 print(f"Entire response:\n{response}")
                 return "Correct"
             elif extracted_title.lower() == "unable to recall":
@@ -44,25 +47,29 @@ async def process_question(provider, model_name, item):
     except Exception as e:
         return "Error"
 
-async def process_model(model_name, questions, pbar):
+async def process_model(model_name, papers, pbar):
     provider = OpenRouterProvider()
     correct_answers = 0
+    total_questions = 0
     results = []
 
-    for item in questions:
-        result = await process_question(provider, model_name, item)
-        if result == "Correct":
-            correct_answers += 1
-        results.append(result)
-        pbar.update(1)
+    for paper in papers:
+        for quote in paper['quotes']:
+            result = await process_question(provider, model_name, paper['title'], quote)
+            if result == "Correct":
+                correct_answers += 1
+            if result != "Blank":
+                total_questions += 1
+            results.append(result)
+            pbar.update(1)
 
-    ptrq_score = (correct_answers / len(questions)) * 100
+    ptrq_score = (correct_answers / total_questions) * 100 if total_questions > 0 else 0
     display_name = model_name.split('/')[-1]
-    print(f"\n{display_name} completed. Score: {ptrq_score:.2f}% ({correct_answers}/{len(questions)})")
-    return [display_name, f"{ptrq_score:.2f}", f"{correct_answers}/{len(questions)}"]
+    print(f"\n{display_name} completed. Score: {ptrq_score:.2f}% ({correct_answers}/{total_questions})")
+    return [display_name, f"{ptrq_score:.2f}", f"{correct_answers}/{total_questions}"]
 
 async def run_benchmark(models):
-    total_tasks = len(models) * len(QUOTES_AND_TITLES)
+    total_tasks = len(models) * sum(len(paper['quotes']) for paper in QUOTES_AND_TITLES)
     results = []
 
     with tqdm(total=total_tasks, desc="Overall Progress") as pbar:

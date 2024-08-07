@@ -1,10 +1,20 @@
 [
-    {
-      "quote": "Another rapid and simple method that depends on specific chemical degradation of the DNA has recently been described by Maxam and Gilbert",
-      "title": "DNA sequencing with chain-terminating inhibitors"
-    },
-    {
-      "quote": "Although the reagent would seem to be recommended by its great sensitivity and the simplicity of procedure possible with its use",
-      "title": "Protein measurement with the Folin phenol reagent"
-    }
+  {
+    "title": "DNA sequencing with chain-terminating inhibitors",
+    "quotes": [
+      "Another rapid and simple method that depends on specific chemical degradation of the DNA has recently been described by Maxam and Gilbert",
+      "of about 110 nucleotides starting 33 residues from the priming site can be read off",
+      "DNA forming base-paired loops under the conditions of the acrylamide gel electrophoresis."
+    ],
+    "citations": 88567
+  },
+  {
+    "title": "Protein measurement with the Folin phenol reagent",
+    "quotes": [
+      "Although the reagent would seem to be recommended by its great sensitivity and the simplicity of procedure possible with its use",
+      "If the tubes are too large in diameter, low  values will result",
+      "it would appear that only about half produce significant reduction of the Folin reagent"
+    ],
+    "citations": 232689
+  }
 ]
