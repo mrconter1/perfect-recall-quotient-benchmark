@@ -15,8 +15,10 @@ MODELS = [
     "mistralai/mistral-large"
 ]
 
+NUMBER_OF_ATTEMPTS = 5
+
 async def main():
-    results = await run_benchmark(MODELS)
+    results = await run_benchmark(MODELS, number_of_attempts=NUMBER_OF_ATTEMPTS)
     print_results_table(results)
 
 if __name__ == "__main__":

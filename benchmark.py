@@ -22,32 +22,47 @@ Unable to recall
 
 Your response will be evaluated for accuracy and used to assess your recall capabilities. Ensure your entire response is contained within these tags."""
 
-async def process_question(provider, model_name, title, quote):
+async def process_question(provider, model_name, title, quote, number_of_attempts, pbar):
     if not quote:
+        pbar.update(number_of_attempts)  # Update progress bar for blank quotes
         return "Blank"
     
-    prompt = create_prompt(quote)
-    try:
-        response = await provider.send_prompt(prompt, model_name)
-        
-        match = re.search(r'<TITLE>\s*(.*?)\s*</TITLE>', response, re.DOTALL | re.IGNORECASE)
-        if match:
-            extracted_title = match.group(1).strip()
-            if extracted_title.lower() == title.strip().lower():
-                print(f"\nCorrect answer for {model_name}:")
-                print(f"Quote: \"{quote}\"")
-                print(f"Entire response:\n{response}")
-                return "Correct"
-            elif extracted_title.lower() == "unable to recall":
-                return "Unable to recall"
+    for attempt in range(number_of_attempts):
+        prompt = create_prompt(quote)
+        try:
+            response = await provider.send_prompt(prompt, model_name)
+            
+            match = re.search(r'<TITLE>\s*(.*?)\s*</TITLE>', response, re.DOTALL | re.IGNORECASE)
+            if match:
+                extracted_title = match.group(1).strip()
+                if extracted_title.lower() == title.strip().lower():
+                    print(f"\nCorrect answer for {model_name} (Attempt {attempt + 1}/{number_of_attempts}):")
+                    print(f"Quote: \"{quote}\"")
+                    print(f"Entire response:\n{response}")
+                    pbar.update(number_of_attempts - attempt)  # Update progress for remaining attempts
+                    return "Correct"
+                elif extracted_title.lower() == "unable to recall":
+                    if attempt == number_of_attempts - 1:
+                        pbar.update(1)  # Update progress for last attempt
+                        return "Unable to recall"
+                else:
+                    if attempt == number_of_attempts - 1:
+                        pbar.update(1)  # Update progress for last attempt
+                        return "Incorrect"
             else:
-                return "Incorrect"
-        else:
-            return "Parse error"
-    except Exception as e:
-        return "Error"
+                if attempt == number_of_attempts - 1:
+                    pbar.update(1)  # Update progress for last attempt
+                    return "Parse error"
+        except Exception as e:
+            if attempt == number_of_attempts - 1:
+                pbar.update(1)  # Update progress for last attempt
+                return "Error"
+        
+        pbar.update(1)  # Update progress after each attempt
+    
+    return "Incorrect"  # If all attempts fail
 
-async def process_model(model_name, papers, pbar):
+async def process_model(model_name, papers, pbar, number_of_attempts):
     provider = OpenRouterProvider()
     correct_answers = 0
     total_questions = 0
@@ -55,25 +70,24 @@ async def process_model(model_name, papers, pbar):
 
     for paper in papers:
         for quote in paper['quotes']:
-            result = await process_question(provider, model_name, paper['title'], quote)
+            result = await process_question(provider, model_name, paper['title'], quote, number_of_attempts, pbar)
             if result == "Correct":
                 correct_answers += 1
             if result != "Blank":
                 total_questions += 1
             results.append(result)
-            pbar.update(1)
 
     ptrq_score = (correct_answers / total_questions) * 100 if total_questions > 0 else 0
     display_name = model_name.split('/')[-1]
     print(f"\n{display_name} completed. Score: {ptrq_score:.2f}% ({correct_answers}/{total_questions})")
     return [display_name, f"{ptrq_score:.2f}", f"{correct_answers}/{total_questions}"]
 
-async def run_benchmark(models):
-    total_tasks = len(models) * sum(len(paper['quotes']) for paper in QUOTES_AND_TITLES)
+async def run_benchmark(models, number_of_attempts):
+    total_tasks = len(models) * sum(len(paper['quotes']) for paper in QUOTES_AND_TITLES) * number_of_attempts
     results = []
 
     with tqdm(total=total_tasks, desc="Overall Progress") as pbar:
-        tasks = [process_model(model, QUOTES_AND_TITLES, pbar) for model in models]
+        tasks = [process_model(model, QUOTES_AND_TITLES, pbar, number_of_attempts) for model in models]
         results = await asyncio.gather(*tasks)
 
     return results

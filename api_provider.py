@@ -7,7 +7,7 @@ import sys
 class OpenRouterProvider:
     _instance = None
     _lock = asyncio.Lock()
-    _rate_limiter = AsyncLimiter(1, 5)  # 1 requests per 1 seconds
+    _rate_limiter = AsyncLimiter(10, 1)  # 10 requests per 1 seconds
 
     def __new__(cls):
         if cls._instance is None:
