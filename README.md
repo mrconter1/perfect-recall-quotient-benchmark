@@ -6,13 +6,19 @@ PRQ Benchmark is a benchmark designed to measure the perfect recall capabilities
 
 <div align="center">
 
-| Model               | PRQ Score (0-100) |
-|:-------------------:|:-----------------:|
-| Model A             | 95                |
-| Model B             | 87                |
-| Model C             | 82                |
-| Model D             | 78                |
-| Model E             | 73                |
+| Model                   | Percentage Success (%) |
+|:-----------------------:|:------------------:|
+| llama-3.1-70b-instruct  | 11.11              |
+| claude-3.5-sonnet       | 5.56               |
+| gpt-3.5-turbo           | 5.56               |
+| llama-3.1-405b-instruct | 5.56               |
+| mistral-large           | 5.56               |
+| gemini-pro-1.5          | 0                  |
+| claude-3-opus           | 0                  |
+| gpt-4-turbo             | 0                  |
+| gpt-4o                  | 0                  |
+| gpt-4o-mini             | 0                  |
+| llama-3.1-8b-instruct   | 0                  |
 
 </div>
 
