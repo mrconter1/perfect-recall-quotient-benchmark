@@ -31,6 +31,9 @@ async def process_question(provider, model_name, item):
         if match:
             extracted_title = match.group(1).strip()
             if extracted_title.lower() == item['title'].strip().lower():
+                print(f"\nCorrect answer for {model_name}:")
+                print(f"Quote: \"{item['quote']}\"")
+                print(f"Entire response:\n{response}")
                 return "Correct"
             elif extracted_title.lower() == "unable to recall":
                 return "Unable to recall"
